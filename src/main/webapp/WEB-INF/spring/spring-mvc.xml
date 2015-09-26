@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	  xmlns:sws="http://www.springframework.org/schema/web-services"
+	  xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/cache 
+        http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+         http://www.springframework.org/schema/oxm 
+         http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd">
+
+	<!-- scan controller, view resolve bean -->
+	<context:component-scan base-package="com.huynhchihieu.controller" />
+	
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+	<!-- Element : resources Configures a handler for serving static resources such as images, js, and, css files with cache headers optimized 
+ for efficient loading in a web browser. Allows resources to be served out of any path that is reachable via Spring's 
+ Resource handling. -->
+	<mvc:resources mapping="/**" location="/" />
+
+	<!-- localeResolver bean of type org.springframework.web.servlet.i18n.CookieLocaleResolver 
+		is used to set a cookie in the client request so that further requests can 
+		easily recognize the user locale. If we don’t register any “localeResolver”, 
+		AcceptHeaderLocaleResolver will be used by default, which resolves user locale 
+		by checking the accept-language header in the client HTTP request. -->
+	<beans:bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<beans:property name="defaultLocale" value="en" />
+		<beans:property name="cookieName" value="myAppLocaleCookie"></beans:property>
+		<beans:property name="cookieMaxAge" value="3600"></beans:property>
+	</beans:bean>
+	
+	<!-- declare messageSource bean -->
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<beans:property name="basename" value="classpath:messages" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+	</beans:bean>
+	
+
+	<mvc:interceptors>
+		<beans:bean
+			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<beans:property name="paramName" value="locale" />
+		</beans:bean>
+	</mvc:interceptors>
+	<!-- the end declare messageSource -->
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	</bean>
+	
+</beans>
